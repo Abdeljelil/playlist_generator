@@ -31,7 +31,7 @@ class VideoSeeker(object):
 
 	"""
 
-	#list of extensions to 
+	# list of video extensions
 	EXTENSIONS =[
 	"webm","mkv","flv","vob","ogv","ogg","drc",'gifv',
 	"mng","avi","mov", "qt","wmv","rm","rmvb","asf","mp4", "m4p" , 
@@ -107,7 +107,7 @@ class Segment(object):
 		"""
 		convert the segment attributes to m3u8 segment info block 
 		Example of m3u8 segment block :
-		#EXTINF:300,my sample video
+		#EXTINF:300,my sample video name
 		/home/videos/sample/myvideo.mp4
 		"""
 
@@ -120,27 +120,32 @@ class Segment(object):
 class PlayListGenerator(object):
 
 	"""
-	create a play list by the list of video given in the constructor
-	files paramter is required to create new object of this class
+	Create play list by whole videos given in the constructor through the parmater "files"
 
 	Example :
 
-	# files : is the list of paths gotten by the class VideoSeeker
-	# sort type : is an optinal field default is sort by creation date 
-	# for sort type your pick one of sort types defined above
-	plg = PlayListGenerator(files,SORT_BY_LAST_ACCESS_DATE)
+	files : (required) list of paths gotten by the class VideoSeeker
+	sort_type : (optinal) sort type of videos in m3u8 file. 
+	              list of sort types in the beginning of this file script.
+	              default value is sort by creation date 
+	
+	Example of instantiation :
+	
+	>> plg = PlayListGenerator(files,SORT_BY_LAST_ACCESS_DATE)
 
-	# dump the content of m3u8 file in file to run in vlc or any video player 
-	# support m3u8 format
-	plg.dump("/tmp/plylist_access.m3u8")
+	dump the content to m3u8 file and use any kind fo video player supports this format, 
+	you can use vlc by this command : "vlc /tmp/playlist_access.m3u8"
+	
+	>> plg.dump("/tmp/playlist_access.m3u8")
 
 	"""
 
 	def __init__(self,files,sort_type=SORT_BY_CREATION_DATE):
 
-		#assert that the files is an list type 
+		# assert that the files is an list type 
 		assert type(files) == list
-		#assert that the sort type is an int type
+		
+		# assert that the sort type is an int type
 		assert type(sort_type) == int
 
 		self.files     = files
@@ -162,11 +167,11 @@ class PlayListGenerator(object):
  	def dumps(self):
 
  		"""
-
- 		create an m3u8 format with the segments created from the video files
- 		and return string 
+ 		Return :
+ 			String, m3u8 content from list of video files
  		"""
-
+		
+		# adding meta-data of m3u8 file
  		full_content = "#EXTM3U\n"
  		full_content += "#EXT-X-PLAYLIST-TYPE:VOD\n"
  		full_content += "#EXT-X-TARGETDURATION:10\n"
@@ -187,7 +192,7 @@ class PlayListGenerator(object):
  	def dump(self,file_name):
 
  		"""
- 		write the content of m3u8 format in file
+ 		Write the content of m3u8 format in file
  		"""
 
  		full_content=self.dumps()
@@ -198,7 +203,7 @@ class PlayListGenerator(object):
 
 if __name__ == '__main__':
 
-	#seeking for video content
+	# seeking for video content
 	vs = VideoSeeker("/media/video")
 	files = vs.get_videos()
 
